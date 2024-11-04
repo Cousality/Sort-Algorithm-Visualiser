@@ -139,7 +139,7 @@ public class SortingVisualizer extends Application {
     }
 
     private void bubbleSort(){
-        System.out.println("Bubble");
+        System.out.println("Bubble Sort");
 
     }
 
