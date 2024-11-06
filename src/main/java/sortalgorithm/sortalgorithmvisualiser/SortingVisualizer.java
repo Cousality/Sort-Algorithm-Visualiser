@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -72,9 +73,7 @@ public class SortingVisualizer extends Application {
         StackPane sortLayout = new StackPane();
 
         // Add a back button
-        Button backButton = new Button("Back to Menu");
-        backButton.setOnAction(_ -> showMainMenu());
-        Button startButton = new Button("Start");
+
 
 
         // Add algorithm name label
@@ -84,6 +83,13 @@ public class SortingVisualizer extends Application {
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.TOP_CENTER);
         layout.setPadding(new Insets(20));
+
+        HBox controls = new HBox(20);
+        controls.setAlignment(Pos.CENTER);
+
+        Button backButton = new Button("Back to Menu");
+        backButton.setOnAction(_ -> showMainMenu());
+        Button startButton = new Button("Start");
 
 
         Pane visualizationPane = new Pane();
@@ -115,7 +121,8 @@ public class SortingVisualizer extends Application {
                     System.out.println("Selection Sort");
                     break;
             }});
-        layout.getChildren().addAll(algorithmLabel, visualizationPane,backButton,startButton);
+        controls.getChildren().addAll(backButton,startButton);
+        layout.getChildren().addAll(algorithmLabel, visualizationPane, controls);
 
 
     }
@@ -129,11 +136,11 @@ public class SortingVisualizer extends Application {
         for (int i = 0; i < NUM_BARS; i++) {
             values[i] = random.nextInt(HEIGHT - 200) + 50;
             bars[i] = new Rectangle();
-            bars[i].setX(i * (BAR_WIDTH + 2) + (WIDTH - NUM_BARS * (BAR_WIDTH + 2)) / 2);
+            bars[i].setX(i * (BAR_WIDTH) + (WIDTH - NUM_BARS * (BAR_WIDTH + 2)) / 2);
             bars[i].setY(HEIGHT-100 - values[i]);
             bars[i].setWidth(BAR_WIDTH);
             bars[i].setHeight(values[i]);
-            bars[i].setFill(Color.BLUE);
+            bars[i].setFill(Color.DARKGRAY);
             pane.getChildren().add(bars[i]);
         }
     }
