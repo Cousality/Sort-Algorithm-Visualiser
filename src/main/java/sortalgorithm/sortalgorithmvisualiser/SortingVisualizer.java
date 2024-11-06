@@ -1,5 +1,8 @@
 package sortalgorithm.sortalgorithmvisualiser;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,8 +16,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
 import javafx.scene.shape.Rectangle;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
+
+import java.util.concurrent.TimeUnit;
 
 public class SortingVisualizer extends Application {
     private Stage primaryStage;
@@ -24,6 +33,8 @@ public class SortingVisualizer extends Application {
     private final int BAR_WIDTH = 10;
     private int[] values;
     private Rectangle[] bars;
+    private Timeline timeline;
+    private double sortingSpeed = 50;
 
     @Override
     public void start(Stage primaryStage) {
@@ -72,10 +83,6 @@ public class SortingVisualizer extends Application {
         // Create a basic layout for the sorting visualization
         StackPane sortLayout = new StackPane();
 
-        // Add a back button
-
-
-
         // Add algorithm name label
         Label algorithmLabel = new Label(algorithm + " Visualization");
         algorithmLabel.setFont(new Font("Arial", 20));
@@ -102,11 +109,11 @@ public class SortingVisualizer extends Application {
         primaryStage.setScene(sortScene);
 
         createBars(visualizationPane);
-
+        // Decides what sort to do after the start button is pressed
         startButton.setOnAction(_ -> {
             switch (algorithm){
                 case "Bubble Sort":
-                    bubbleSort();
+                    bubbleSort(visualizationPane);
                     break;
                 case "Quick Sort":
                     System.out.println("Quick Sort");
@@ -121,6 +128,7 @@ public class SortingVisualizer extends Application {
                     System.out.println("Selection Sort");
                     break;
             }});
+
         controls.getChildren().addAll(backButton,startButton);
         layout.getChildren().addAll(algorithmLabel, visualizationPane, controls);
 
@@ -145,10 +153,33 @@ public class SortingVisualizer extends Application {
         }
     }
 
-    private void bubbleSort(){
-        System.out.println("Bubble Sort");
 
+    private void bubbleSort(Pane pane) {
+        ArrayList<int[]> states = new ArrayList<>();
+        int[] arr = values.clone();
+
+        boolean swapped;
+        int temp;
+        for (int x = 0; x < values.length; x++) {
+            swapped = false;
+            for (int y = 0; y < (values.length) - 1; y++) {
+                if (values[y] > values[y + 1]) {
+                    temp = values[y];
+                    values[y] = values[y + 1];
+                    values[y + 1] = temp;
+                    swapped = true;
+                    states.add(arr.clone());
+                }
+            }
+
+            if (!swapped) {
+                break;
+            }
+        }
     }
+
+
+
 
     public static void main(String[] args) {
         launch(args);
