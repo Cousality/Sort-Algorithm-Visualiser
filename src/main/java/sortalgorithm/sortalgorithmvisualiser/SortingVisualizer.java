@@ -7,7 +7,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -112,7 +111,7 @@ public class SortingVisualizer extends Application {
         initializeBars(visualizationPane);
 
         // Button actions
-        startButton.setOnAction(e -> {
+        startButton.setOnAction(_ -> {
             if (timeline != null) timeline.stop();
             switch (algorithm) {
                 case "Bubble Sort":
@@ -133,7 +132,7 @@ public class SortingVisualizer extends Application {
             }
         });
 
-        resetButton.setOnAction(e -> {
+        resetButton.setOnAction(_ -> {
             if (timeline != null) timeline.stop();
             initializeBars(visualizationPane);
         });
@@ -161,14 +160,6 @@ public class SortingVisualizer extends Application {
         }
     }
 
-    private void updateBars() {
-        for (int i = 0; i < NUM_BARS; i++) {
-            bars[i].setHeight(values[i]);
-            bars[i].setY(HEIGHT - 150 - values[i]);
-        }
-    }
-
-    // Sorting Algorithms
     private void bubbleSort() {
         ArrayList<int[]> states = new ArrayList<>();
         int[] arr = values.clone();
@@ -193,20 +184,19 @@ public class SortingVisualizer extends Application {
         animateStates(states);
     }
 
-
-
-
-
-
-
-
+    private void updateBars() {
+        for (int i = 0; i < NUM_BARS; i++) {
+            bars[i].setHeight(values[i]);
+            bars[i].setY(HEIGHT - 150 - values[i]);
+        }
+    }
 
     private void animateStates(ArrayList<int[]> states) {
         timeline = new Timeline();
         for (int i = 0; i < states.size(); i++) {
             final int index = i;
             KeyFrame keyFrame = new KeyFrame(Duration.millis(sortingSpeed * i),
-                    e -> {
+                    _ -> {
                         values = states.get(index);
                         updateBars();
                     }
