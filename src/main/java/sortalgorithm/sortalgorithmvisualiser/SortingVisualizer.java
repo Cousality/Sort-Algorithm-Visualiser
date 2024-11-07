@@ -41,6 +41,7 @@ public class SortingVisualizer extends Application {
     }
 
     private void showMainMenu() {
+        // Creating main menu
         VBox menuLayout = new VBox(20);
         menuLayout.setAlignment(Pos.CENTER);
         menuLayout.setPadding(new Insets(20));
@@ -54,14 +55,7 @@ public class SortingVisualizer extends Application {
         Button insertionSortBtn = createMenuButton("Insertion Sort");
         Button selectionSortBtn = createMenuButton("Selection Sort");
 
-        menuLayout.getChildren().addAll(
-                titleLabel,
-                bubbleSortBtn,
-                quickSortBtn,
-                mergeSortBtn,
-                insertionSortBtn,
-                selectionSortBtn
-        );
+        menuLayout.getChildren().addAll(titleLabel, bubbleSortBtn, quickSortBtn, mergeSortBtn, insertionSortBtn, selectionSortBtn);
 
         Scene menuScene = new Scene(menuLayout, WIDTH, HEIGHT);
         primaryStage.setScene(menuScene);
@@ -95,19 +89,16 @@ public class SortingVisualizer extends Application {
 
         controls.getChildren().addAll(backButton, startButton, resetButton);
 
-        // Algorithm name
+
         Label algorithmLabel = new Label(algorithm + " Visualization");
         algorithmLabel.setFont(new Font("Arial", 20));
 
-        // Visualization area
         Pane visualizationPane = new Pane();
         visualizationPane.setPrefSize(WIDTH, HEIGHT - 150);
         visualizationPane.setStyle("-fx-background-color: #f4f4f4;");
 
-        // Initialize bars
-        initializeBars(visualizationPane);
-
-        // Button actions
+        createBars(visualizationPane);
+        // Buttons Output upon start
         startButton.setOnAction(_ -> {
             if (timeline != null) timeline.stop();
             switch (algorithm) {
@@ -121,7 +112,7 @@ public class SortingVisualizer extends Application {
                     System.out.println("Merge Sort");
                     break;
                 case "Insertion Sort":
-                    System.out.println("Insertion Sort");
+                    insertionSort();
                     break;
                 case "Selection Sort":
                     System.out.println("Selection Sort");
@@ -131,7 +122,7 @@ public class SortingVisualizer extends Application {
 
         resetButton.setOnAction(_ -> {
             if (timeline != null) timeline.stop();
-            initializeBars(visualizationPane);
+            createBars(visualizationPane);
         });
 
         layout.getChildren().addAll(controls, algorithmLabel, visualizationPane);
@@ -139,7 +130,7 @@ public class SortingVisualizer extends Application {
         primaryStage.setScene(sortScene);
     }
 
-    private void initializeBars(Pane pane) {
+    private void createBars(Pane pane) {
         pane.getChildren().clear();
         bars = new Rectangle[NUM_BARS];
         values = new int[NUM_BARS];
@@ -186,7 +177,7 @@ public class SortingVisualizer extends Application {
         animateStates(states);
     }
 // Bubble Sort -----------------------------------------------------------------------------------------
-
+// Quick Sort ------------------------------------------------------------------------------------------
     private void quickSort() {
         ArrayList<int[]> states = new ArrayList<>();
         quickSortMethod(values.clone(), 0, NUM_BARS - 1, states);
@@ -221,7 +212,26 @@ public class SortingVisualizer extends Application {
 
         return i + 1;
     }
+// Quick Sort----------------------------------------------------------------------------------------------------
+// Insertion Sort-------------------------------------------------------------------------------------------------
+    private void insertionSort(){
+        ArrayList<int[]> states = new ArrayList<>();
+        int[] arr = values.clone();
+        for (int i = 1; i < arr.length; i++){
+            int key = arr[i];
+            int j = i - 1;
 
+            while (j >= 0 && arr[j] > key){
+                arr[j + 1] = arr[j];
+                j = j -1;
+                states.add(arr.clone());
+            }
+            arr[j + 1] = key;
+            states.add(arr.clone());
+        }
+        animateStates(states);
+    }
+// Insertion Sort-------------------------------------------------------------------------------------------------
     private void updateBars() {
         for (int i = 0; i < NUM_BARS; i++) {
             bars[i].setHeight(values[i]);
@@ -239,7 +249,7 @@ public class SortingVisualizer extends Application {
         for (int i = 0; i < states.size(); i++) {
             final int index = i;
             KeyFrame keyFrame = new KeyFrame(Duration.millis(sortingSpeed * i),
-                    e -> {
+                    _ -> {
                         values = states.get(index);
                         updateBars();
                     }
