@@ -93,9 +93,6 @@ public class SortingVisualizer extends Application {
         Button startButton = new Button("Start");
         Button resetButton = new Button("Reset");
 
-        // Speed slider
-
-
         controls.getChildren().addAll(backButton, startButton, resetButton);
 
         // Algorithm name
@@ -118,7 +115,7 @@ public class SortingVisualizer extends Application {
                     bubbleSort();
                     break;
                 case "Quick Sort":
-                    System.out.println("Quick Sort");
+                    quickSort();
                     break;
                 case "Merge Sort":
                     System.out.println("Merge Sort");
@@ -155,11 +152,16 @@ public class SortingVisualizer extends Application {
             bars[i].setY(HEIGHT - 150 - values[i]);
             bars[i].setWidth(BAR_WIDTH);
             bars[i].setHeight(values[i]);
-            bars[i].setFill(Color.BLUE);
+            if (i % 2 == 0) {
+                bars[i].setFill(Color.GRAY);
+            } else {
+                bars[i].setFill(Color.DARKGRAY);
+            }
             pane.getChildren().add(bars[i]);
         }
     }
 
+    // Bubble Sort -----------------------------------------------------------------------------------
     private void bubbleSort() {
         ArrayList<int[]> states = new ArrayList<>();
         int[] arr = values.clone();
@@ -183,11 +185,52 @@ public class SortingVisualizer extends Application {
 
         animateStates(states);
     }
+// Bubble Sort -----------------------------------------------------------------------------------------
+
+    private void quickSort() {
+        ArrayList<int[]> states = new ArrayList<>();
+        quickSortMethod(values.clone(), 0, NUM_BARS - 1, states);
+        animateStates(states);
+    }
+
+    private void quickSortMethod(int[] arr, int low, int high, ArrayList<int[]> states) {
+        if (low < high) {
+            int pi = partition(arr, low, high, states);
+            quickSortMethod(arr, low, pi - 1, states);
+            quickSortMethod(arr, pi + 1, high, states);
+        }
+    }
+
+    private int partition(int[] arr, int low, int high, ArrayList<int[]> states) {
+        int pivot = arr[high];
+        int i = low - 1;
+
+        for (int j = low; j < high; j++) {
+            if (arr[j] < pivot) {
+                i++;
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+                states.add(arr.clone());
+            }
+        }
+        int temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+        states.add(arr.clone());
+
+        return i + 1;
+    }
 
     private void updateBars() {
         for (int i = 0; i < NUM_BARS; i++) {
             bars[i].setHeight(values[i]);
             bars[i].setY(HEIGHT - 150 - values[i]);
+            if (i%2 == 0){
+                bars[i].setFill(Color.GRAY);
+            }else{
+                bars[i].setFill(Color.DARKGRAY);
+            }
         }
     }
 
@@ -196,7 +239,7 @@ public class SortingVisualizer extends Application {
         for (int i = 0; i < states.size(); i++) {
             final int index = i;
             KeyFrame keyFrame = new KeyFrame(Duration.millis(sortingSpeed * i),
-                    _ -> {
+                    e -> {
                         values = states.get(index);
                         updateBars();
                     }
