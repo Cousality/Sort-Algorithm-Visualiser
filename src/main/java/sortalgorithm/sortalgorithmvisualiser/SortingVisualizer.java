@@ -26,7 +26,7 @@ public class SortingVisualizer extends Application {
     private Rectangle[] bars;
     private int[] values;
     private Timeline timeline;
-    private double sortingSpeed = 50; // milliseconds
+    private final double sortingSpeed = 50; // milliseconds
 
     public static void main(String[] args) {
         launch(args);
@@ -134,7 +134,7 @@ public class SortingVisualizer extends Application {
         for (int i = 0; i < NUM_BARS; i++) {
             values[i] = random.nextInt(HEIGHT - 200) + 50;
             bars[i] = new Rectangle();
-            bars[i].setX(i * (BAR_WIDTH) + (WIDTH - NUM_BARS * (BAR_WIDTH + 2)) / 2);
+            bars[i].setX(i * (BAR_WIDTH) + (double) (WIDTH - NUM_BARS * (BAR_WIDTH + 2)) / 2);
             bars[i].setY(HEIGHT - 150 - values[i]);
             bars[i].setWidth(BAR_WIDTH);
             bars[i].setHeight(values[i]);
@@ -211,15 +211,15 @@ public class SortingVisualizer extends Application {
 // Merge Sort -------------------------------------------------------------------------------------------------------
     private void mergeSort() {
         ArrayList<int[]> states = new ArrayList<>();
-        mergeSortHelper(values.clone(), 0, NUM_BARS - 1, states);
+        mergeSortMethod(values.clone(), 0, NUM_BARS - 1, states);
         animateStates(states);
     }
 
-    private void mergeSortHelper(int[] arr, int l, int r, ArrayList<int[]> states) {
+    private void mergeSortMethod(int[] arr, int l, int r, ArrayList<int[]> states) {
         if (l < r) {
             int m = (l + r) / 2;
-            mergeSortHelper(arr, l, m, states);
-            mergeSortHelper(arr, m + 1, r, states);
+            mergeSortMethod(arr, l, m, states);
+            mergeSortMethod(arr, m + 1, r, states);
             merge(arr, l, m, r, states);
         }
     }
@@ -231,8 +231,7 @@ public class SortingVisualizer extends Application {
         int[] L = new int[n1];
         int[] R = new int[n2];
 
-        for (int i = 0; i < n1; ++i)
-            L[i] = arr[l + i];
+        System.arraycopy(arr, l, L, 0, n1);
         for (int j = 0; j < n2; ++j)
             R[j] = arr[m + 1 + j];
 
@@ -306,6 +305,7 @@ public class SortingVisualizer extends Application {
         animateStates(states);
     }
 // Selection Sort ------------------------------------------------------------------------------------------------
+
     private void updateBars() {
         for (int i = 0; i < NUM_BARS; i++) {
             bars[i].setHeight(values[i]);
