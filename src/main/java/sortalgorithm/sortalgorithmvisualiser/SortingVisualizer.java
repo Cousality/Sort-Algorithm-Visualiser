@@ -45,18 +45,14 @@ public class SortingVisualizer extends Application {
         VBox menuLayout = new VBox(20);
         menuLayout.setAlignment(Pos.CENTER);
         menuLayout.setPadding(new Insets(20));
-
         Label titleLabel = new Label("Sorting Algorithm Visualizer");
         titleLabel.setFont(new Font("Arial", 24));
-
         Button bubbleSortBtn = createMenuButton("Bubble Sort");
         Button quickSortBtn = createMenuButton("Quick Sort");
         Button mergeSortBtn = createMenuButton("Merge Sort");
         Button insertionSortBtn = createMenuButton("Insertion Sort");
         Button selectionSortBtn = createMenuButton("Selection Sort");
-
         menuLayout.getChildren().addAll(titleLabel, bubbleSortBtn, quickSortBtn, mergeSortBtn, insertionSortBtn, selectionSortBtn);
-
         Scene menuScene = new Scene(menuLayout, WIDTH, HEIGHT);
         primaryStage.setScene(menuScene);
     }
@@ -89,7 +85,6 @@ public class SortingVisualizer extends Application {
 
         controls.getChildren().addAll(backButton, startButton, resetButton);
 
-
         Label algorithmLabel = new Label(algorithm + " Visualization");
         algorithmLabel.setFont(new Font("Arial", 20));
 
@@ -115,7 +110,7 @@ public class SortingVisualizer extends Application {
                     insertionSort();
                     break;
                 case "Selection Sort":
-                    System.out.println("Selection Sort");
+                    selectionSort();
                     break;
             }
         });
@@ -152,7 +147,7 @@ public class SortingVisualizer extends Application {
         }
     }
 
-    // Bubble Sort -----------------------------------------------------------------------------------
+// Bubble Sort -----------------------------------------------------------------------------------
     private void bubbleSort() {
         ArrayList<int[]> states = new ArrayList<>();
         int[] arr = values.clone();
@@ -177,6 +172,7 @@ public class SortingVisualizer extends Application {
         animateStates(states);
     }
 // Bubble Sort -----------------------------------------------------------------------------------------
+
 // Quick Sort ------------------------------------------------------------------------------------------
     private void quickSort() {
         ArrayList<int[]> states = new ArrayList<>();
@@ -195,7 +191,6 @@ public class SortingVisualizer extends Application {
     private int partition(int[] arr, int low, int high, ArrayList<int[]> states) {
         int pivot = arr[high];
         int i = low - 1;
-
         for (int j = low; j < high; j++) {
             if (arr[j] < pivot) {
                 i++;
@@ -209,10 +204,10 @@ public class SortingVisualizer extends Application {
         arr[i + 1] = arr[high];
         arr[high] = temp;
         states.add(arr.clone());
-
         return i + 1;
     }
 // Quick Sort----------------------------------------------------------------------------------------------------
+
 // Insertion Sort-------------------------------------------------------------------------------------------------
     private void insertionSort(){
         ArrayList<int[]> states = new ArrayList<>();
@@ -232,6 +227,27 @@ public class SortingVisualizer extends Application {
         animateStates(states);
     }
 // Insertion Sort-------------------------------------------------------------------------------------------------
+
+// Selection Sort ------------------------------------------------------------------------------------------------
+    private void selectionSort(){
+        ArrayList<int[]> states = new ArrayList<>();
+        int[] arr = values.clone();
+        for (int i = 0; i < arr.length; i++){
+            int min = i;
+
+            for (int j = i+1; j < arr.length; j++){
+                if (arr[j] < arr[min]){
+                    min = j;
+                }
+            }
+            int temp = arr[i];
+            arr[i] = arr[min];
+            arr[min] = temp;
+            states.add(arr.clone());
+        }
+        animateStates(states);
+    }
+// Selection Sort ------------------------------------------------------------------------------------------------
     private void updateBars() {
         for (int i = 0; i < NUM_BARS; i++) {
             bars[i].setHeight(values[i]);
